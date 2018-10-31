@@ -1,0 +1,6 @@
+.idea
+kalaha-core/target
+kalaha-ui/target
+kalaha-ui/node
+kalaha-ui/node_modules
+kalaha-ui/dist
