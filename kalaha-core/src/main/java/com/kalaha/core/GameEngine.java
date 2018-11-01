@@ -53,10 +53,13 @@ public class GameEngine {
                 increment();
             }
             board.decrement(startingPoint);
-            board.increment(currentPos);
             if(!hasNext()){
+                if(!Utils.captureStones(board, player, currentPos))
+                    board.increment(currentPos);
                 board.setWhosNext(Utils.getWhosNext(board, player, currentPos));
                 board.setWinner(Utils.getWinner(board));
+            } else {
+                board.increment(currentPos);
             }
             return board;
         }

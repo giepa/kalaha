@@ -51,7 +51,17 @@ public class Game {
     }
 
     public void increment(int pit){
-        data.set(pit, data.get(pit)+1);
+        increment(pit, 1);
+    }
+
+    public void increment(int pit, int amout){
+        data.set(pit, data.get(pit) + amout);
+    }
+
+    public int clear(int pit){
+        int rt = get(pit);
+        data.set(pit, 0);
+        return rt;
     }
 
     public void decrement(int pit){

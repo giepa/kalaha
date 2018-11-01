@@ -26,7 +26,11 @@ public class Utils {
     }
 
     public static String getLeader(Game board){
-        return getKalaha(board, board.getPlayer1()) > getKalaha(board, board.getPlayer2())
+        int score1 = getKalaha(board, board.getPlayer1());
+        int score2 = getKalaha(board, board.getPlayer2());
+        if(score1 == score2)
+            return null;
+        return score1 > score2
                 ? board.getPlayer1()
                 : board.getPlayer2();
     }
@@ -70,5 +74,31 @@ public class Utils {
                     if(i == (size*2)+1) return 0;
                     return size;
                 });
+    }
+
+    public static int getOpositePit(Game board, int pit){
+        int size = board.getData().size() - 2;
+        return pit > size
+                ? Math.abs(pit - size)
+                : size - pit;
+    }
+
+    public static boolean canCaptureStones(Game board, String player, int pit){
+        return getPlayerPits(board, player)
+                .filter(v -> v == pit)
+                .filter(v -> board.get(v) == 0)
+                .findAny()
+                .isPresent();
+    }
+
+    public static boolean captureStones(Game board, String player, int pit){
+        if(canCaptureStones(board, player, pit)){
+            int stones = board.clear(getOpositePit(board, pit));
+            int k = getKalahaIndex(board, player);
+            board.increment(k, stones  + 1 );
+            return true;
+        } else {
+            return false;
+        }
     }
 }

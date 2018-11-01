@@ -45,6 +45,11 @@ public class UtilsTest {
         board.setPlayer1(PLAYER1);
         board.setPlayer2(PLAYER2);
         assertEquals(PLAYER1, Utils.getLeader(board));
+
+        board = Game.getInstance();
+        board.setPlayer1(PLAYER1);
+        board.setPlayer2(PLAYER2);
+        assertNull(Utils.getLeader(board));
     }
 
     @Test
@@ -147,4 +152,67 @@ public class UtilsTest {
                 .sum()
         );
     }
+
+    @Test
+    public void getOpositePit(){
+        Game board = Game.getInstance();
+        assertEquals(0, Utils.getOpositePit(board, 12));
+        assertEquals(1, Utils.getOpositePit(board, 11));
+        assertEquals(8, Utils.getOpositePit(board, 4));
+        assertEquals(7, Utils.getOpositePit(board, 5));
+
+        board = Game.getInstance(4);
+        assertEquals(0, Utils.getOpositePit(board, 8));
+        assertEquals(1, Utils.getOpositePit(board, 7));
+        assertEquals(8, Utils.getOpositePit(board, 0));
+        assertEquals(7, Utils.getOpositePit(board, 1));
+    }
+
+    @Test
+    public void canCaptureStones(){
+        Game board = Game.getInstance(new int [] {
+                0, 0, 6, 6, 0, 0, 30,  // player 1
+                6, 6, 0, 0, 6, 6, 0    // player 2
+        });
+        board.setPlayer1(PLAYER1);
+        board.setPlayer2(PLAYER2);
+        assertTrue(Utils.canCaptureStones(board, PLAYER1, 0));
+        assertTrue(Utils.canCaptureStones(board, PLAYER1, 1));
+        assertFalse(Utils.canCaptureStones(board, PLAYER1, 3));
+        assertTrue(Utils.canCaptureStones(board, PLAYER2, 9));
+        assertTrue(Utils.canCaptureStones(board, PLAYER2, 10));
+        assertFalse(Utils.canCaptureStones(board, PLAYER2, 11));
+    }
+
+    @Test
+    public void captureStones(){
+        Game board = Game.getInstance(new int [] {
+                0, 0, 6, 6, 0, 0, 36,  // player 1
+                6, 6, 0, 0, 6, 5, 0    // player 2
+        });
+        board.setPlayer1(PLAYER1);
+        board.setPlayer2(PLAYER2);
+        assertTrue(Utils.captureStones(board, PLAYER1, 0));
+        assertEquals(0, board.get(12));
+        assertEquals(42, board.get(6));
+
+        board.decrement(7);
+        assertTrue(Utils.captureStones(board, PLAYER2, 9));
+        assertEquals(0, board.get(3));
+        assertEquals(7, board.get(13));
+
+        board = Game.getInstance(new int [] {
+                0, 0, 6, 10, 6, 0, 26,  // player 1
+                6, 6, 0, 0,  6, 5, 0    // player 2
+        });
+        board.setPlayer1(PLAYER1);
+        board.setPlayer2(PLAYER2);
+
+        GameEngine game = GameEngine.getInstance(board);
+        game.executeMove(PLAYER1, 3);
+        assertEquals(0, board.get(0));
+        assertEquals(0, board.get(12));
+        assertEquals(34, board.get(6));
+    }
+
 }
